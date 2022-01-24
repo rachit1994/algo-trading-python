@@ -1,0 +1,1 @@
+export PYTHONPATH="${PYTHONPATH}:/Developer/algoTrading/scratch
