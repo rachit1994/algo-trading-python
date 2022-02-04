@@ -17,8 +17,11 @@ class FiboFactors:
 sz = []
 
 class Abcd():
-    def __init__(self, candle: Candle, use_alt_timeframe=True, current_time_frame="5minute", alt_time_frame="60minute"):
-        self.candle = candle
+    def __init__(self, df):
+        self.candle = df
+        use_alt_timeframe=True
+        current_time_frame="5minute"
+        alt_time_frame="60minute"
         self.interval = current_time_frame
         self.alt_time_frame = alt_time_frame
         self.use_alt_timeframe = use_alt_timeframe

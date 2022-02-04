@@ -20,5 +20,5 @@ def get_grouped_candles(candle, interval, altinterval):
     before_time = subtract_minutes_from_time(current_time, m)
     candles = get_ticks_between_times(candle.symbol, before_time, current_time)
     if not candles.empty:
-        grouped_candles = candles.resample("1H").mean()
+        grouped_candles = candles.resample(altinterval).mean()
     return grouped_candles

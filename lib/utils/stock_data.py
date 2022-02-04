@@ -1,11 +1,11 @@
 import pandas as pd
 from constants.common import CSV_PATH, mode
 from datetime import datetime
-from datetime import timedelta
+from utils.read_csv import get_historical_data_from_csv
 
 def get_ticks_between_times(symbol, from_date, to_date):
     if mode == 'back_test':
-        df = pd.read_csv(CSV_PATH+symbol+'.csv', parse_dates=['TIME', 'Date', 'TIME1'], infer_datetime_format=True, index_col=0)
+        df = get_historical_data_from_csv(CSV_PATH+symbol+'.csv')
         return df[df.TIME.between(from_date, to_date)]
 
 def subtract_minutes_from_time(timestamp, n):

@@ -7,5 +7,5 @@ def read_csv(file_path, callback, *argv):
             callback(i, *argv)
             break
 
-def get_dataframe_from_csv(file_path):
-    return pd.read_csv(file_path)
+def get_historical_data_from_csv(file_path):
+    return pd.read_csv(file_path, parse_dates=['TIME', 'Date', 'TIME1'], infer_datetime_format=True, index_col=0)

@@ -3,7 +3,7 @@ venv/
 config/
 build/
 dist/
-helloworld.egg-info
+**/**.egg-info
 */*.egg
 venv/
 .venv/
