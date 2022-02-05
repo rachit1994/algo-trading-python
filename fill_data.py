@@ -7,6 +7,7 @@ from datetime import timedelta
 from dateutil.tz import tzoffset
 import multiprocessing
 import time
+from dateutil.relativedelta import relativedelta
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -27,29 +28,50 @@ def login():
 
 def fill_data(stock):
     now = datetime.datetime.now()
-    n = 200
-    time_str = '1994-01-01 09:15:00'
+    n = 1440
+    time_str = '2015-01-01 09:15:00'
     date_format_str = '%Y-%m-%d %H:%M:%S'
     kite = KiteConnect(api_key=api_key)
     kite.set_access_token(access_token)
-    # for stock in stocks:
-        # csv_file =  open("./kite_historical_data/" + stock["tradingsymbol"] + ".csv", 'w')
-        # csv_writer = csv.writer(csv_file)
     given_time = datetime.datetime.strptime(time_str, date_format_str)
     final_time = given_time + timedelta(minutes=n)
     while final_time <= now:
         data = kite.historical_data(
             instrument_token=stock["instrumenttoken"], from_date=given_time, oi=True, to_date=final_time, interval="minute")
+        print("filling : ", stock["tradingsymbol"])
+        print("data : ", len(data))
         df = pd.DataFrame.from_records(data)
         df.to_csv("./kite_historical_data/" +
                     stock["tradingsymbol"] + ".csv", mode='a', index=False, header=False)
-        time.sleep(3)
-        # for row in data:
-        #     csv_writer.writerow(row)
-
         given_time = final_time + timedelta(minutes=1)
         final_time = given_time + timedelta(minutes=n)
-        # csv_file.close()
+        time.sleep(5)
+
+# def fill_data2():
+#     now = datetime.datetime.now()
+#     n = 200
+#     time_str = '2008-01-01 09:15:00'
+#     date_format_str = '%Y-%m-%d %H:%M:%S'
+#     kite = KiteConnect(api_key=api_key)
+#     kite.set_access_token(access_token)
+#     for stock in stocks:
+#         given_time = datetime.datetime.strptime(time_str, date_format_str)
+#         final_time = given_time + timedelta(minutes=n)
+#         while final_time <= now:
+#             data = kite.historical_data(
+#                 instrument_token=stock["instrumenttoken"], from_date=given_time, oi=True, to_date=final_time, interval="minute")
+#             if len(data) > 0:
+#                 df = pd.DataFrame.from_records(data)
+#                 print("filling : ", stock["tradingsymbol"])
+#                 print("data : ", len(data))
+#                 df.to_csv("./kite_historical_data/" +
+#                             stock["tradingsymbol"] + ".csv", mode='a', index=False, header=False)
+#                 given_time = final_time + timedelta(minutes=1)
+#                 final_time = given_time + timedelta(minutes=n)
+#             else:
+#                 given_time = final_time + relativedelta(months=1)
+#                 final_time = given_time + timedelta(minutes=n)
+#             # time.sleep(3)
 
 def thread_loop():
     # processes = []
@@ -90,3 +112,4 @@ if __name__ == "__main__":
     # asyncio.run(fill_data())
     thread_loop()
     # dict_to_pandas()
+    # fill_data2()
