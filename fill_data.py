@@ -1,6 +1,6 @@
 import logging
 from kiteconnect import KiteConnect
-from config.kite import api_key, request_token, api_secret, tokens_list, access_token, stocks
+from config.kite import api_key, request_token, api_secret, tokens_list, access_token
 import pandas as pd
 import datetime
 from datetime import timedelta
@@ -8,15 +8,10 @@ from dateutil.tz import tzoffset
 import multiprocessing
 import time
 from dateutil.relativedelta import relativedelta
+from os.path import exists
+import os
 
 logging.basicConfig(level=logging.DEBUG)
-
-# Redirect the user to the login url obtained
-# from kite.login_url(), and receive the request_token
-# from the registered redirect url after the login flow.
-# Once you have the request_token, obtain the access_token
-# as follows.
-
 
 def login():
     kite = KiteConnect(api_key=api_key)
@@ -34,10 +29,18 @@ def fill_data(stock):
     kite = KiteConnect(api_key=api_key)
     kite.set_access_token(access_token)
     given_time = datetime.datetime.strptime(time_str, date_format_str)
+    file_path = "./kite_historical_data/"+ stock["tradingsymbol"] + ".csv"
+    if exists(file_path) and not os.stat(file_path).st_size == 0:
+        df1 = pd.read_csv(file_path, header=None, delim_whitespace=True)
+        print(stock["tradingsymbol"] , df1.empty)
+        if not df1.empty:
+            last_row =  df1.iloc[-1]
+            time_str = last_row[0]
+            given_time = pd.to_datetime(time_str) + timedelta(minutes=1)
     final_time = given_time + timedelta(minutes=n)
     while final_time <= now:
         data = kite.historical_data(
-            instrument_token=stock["instrumenttoken"], from_date=given_time, oi=True, to_date=final_time, interval="minute")
+            instrument_token=str(stock["instrument_token"]), from_date=given_time, oi=True, to_date=final_time, interval="minute")
         print("filling : ", stock["tradingsymbol"])
         print("data : ", len(data))
         df = pd.DataFrame.from_records(data)
@@ -47,45 +50,10 @@ def fill_data(stock):
         final_time = given_time + timedelta(minutes=n)
         time.sleep(5)
 
-# def fill_data2():
-#     now = datetime.datetime.now()
-#     n = 200
-#     time_str = '2008-01-01 09:15:00'
-#     date_format_str = '%Y-%m-%d %H:%M:%S'
-#     kite = KiteConnect(api_key=api_key)
-#     kite.set_access_token(access_token)
-#     for stock in stocks:
-#         given_time = datetime.datetime.strptime(time_str, date_format_str)
-#         final_time = given_time + timedelta(minutes=n)
-#         while final_time <= now:
-#             data = kite.historical_data(
-#                 instrument_token=stock["instrumenttoken"], from_date=given_time, oi=True, to_date=final_time, interval="minute")
-#             if len(data) > 0:
-#                 df = pd.DataFrame.from_records(data)
-#                 print("filling : ", stock["tradingsymbol"])
-#                 print("data : ", len(data))
-#                 df.to_csv("./kite_historical_data/" +
-#                             stock["tradingsymbol"] + ".csv", mode='a', index=False, header=False)
-#                 given_time = final_time + timedelta(minutes=1)
-#                 final_time = given_time + timedelta(minutes=n)
-#             else:
-#                 given_time = final_time + relativedelta(months=1)
-#                 final_time = given_time + timedelta(minutes=n)
-#             # time.sleep(3)
-
-def thread_loop():
-    # processes = []
-
-    # for stock in stocks:
-    #     p = multiprocessing.Process(target=fill_data, args=(stock,))
-    #     p.start()
-    #     processes.append(p)
-
-    # for process in processes:
-    #     process.join()
+def thread_loop(stocks):
     pool = multiprocessing.Pool(len(stocks))
     pool.map(fill_data, stocks)
-    pool.close()
+    # pool.close()
 
 def print_data():
     n = 100
@@ -110,6 +78,6 @@ if __name__ == "__main__":
     # print(kite.login_url())
     # login()
     # asyncio.run(fill_data())
-    thread_loop()
-    # dict_to_pandas()
-    # fill_data2()
+    for chunk in pd.read_csv('./temp/instruments.csv', chunksize=10):
+        thread_loop(chunk.to_dict('records'))
+    
