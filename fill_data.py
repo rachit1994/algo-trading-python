@@ -8,6 +8,7 @@ from dateutil.tz import tzoffset
 import multiprocessing
 import time
 from dateutil.relativedelta import relativedelta
+from lib.utils.read_csv import read_all_csv_in_dir
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -47,42 +48,8 @@ def fill_data(stock):
         final_time = given_time + timedelta(minutes=n)
         time.sleep(5)
 
-# def fill_data2():
-#     now = datetime.datetime.now()
-#     n = 200
-#     time_str = '2008-01-01 09:15:00'
-#     date_format_str = '%Y-%m-%d %H:%M:%S'
-#     kite = KiteConnect(api_key=api_key)
-#     kite.set_access_token(access_token)
-#     for stock in stocks:
-#         given_time = datetime.datetime.strptime(time_str, date_format_str)
-#         final_time = given_time + timedelta(minutes=n)
-#         while final_time <= now:
-#             data = kite.historical_data(
-#                 instrument_token=stock["instrumenttoken"], from_date=given_time, oi=True, to_date=final_time, interval="minute")
-#             if len(data) > 0:
-#                 df = pd.DataFrame.from_records(data)
-#                 print("filling : ", stock["tradingsymbol"])
-#                 print("data : ", len(data))
-#                 df.to_csv("./kite_historical_data/" +
-#                             stock["tradingsymbol"] + ".csv", mode='a', index=False, header=False)
-#                 given_time = final_time + timedelta(minutes=1)
-#                 final_time = given_time + timedelta(minutes=n)
-#             else:
-#                 given_time = final_time + relativedelta(months=1)
-#                 final_time = given_time + timedelta(minutes=n)
-#             # time.sleep(3)
 
 def thread_loop():
-    # processes = []
-
-    # for stock in stocks:
-    #     p = multiprocessing.Process(target=fill_data, args=(stock,))
-    #     p.start()
-    #     processes.append(p)
-
-    # for process in processes:
-    #     process.join()
     pool = multiprocessing.Pool(len(stocks))
     pool.map(fill_data, stocks)
     pool.close()
@@ -104,12 +71,24 @@ def dict_to_pandas():
     df = pd.DataFrame.from_records(di)
     df.to_csv("test.csv")
 
+def add_headers(csv_path):
+    path = './kite_historical_data/' + csv_path
+    file = pd.read_csv(path)
+    # adding header
+    headerList = ['date','open','high','low','close','volume','oi']
+    # converting data frame to csv
+    file.to_csv(path, header=headerList, index=False)
+
+
+def read_and_all_header():
+    read_all_csv_in_dir('./kite_historical_data', add_headers)
 
 if __name__ == "__main__":
     # kite = KiteConnect(api_key=api_key)
     # print(kite.login_url())
     # login()
     # asyncio.run(fill_data())
-    thread_loop()
+    # thread_loop()
     # dict_to_pandas()
     # fill_data2()
+    read_and_all_header()
