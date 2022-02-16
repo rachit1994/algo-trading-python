@@ -8,8 +8,7 @@ from dateutil.tz import tzoffset
 import multiprocessing
 import time
 from dateutil.relativedelta import relativedelta
-from os.path import exists
-import os
+from lib.utils.read_csv import read_all_csv_in_dir
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -50,7 +49,8 @@ def fill_data(stock):
         final_time = given_time + timedelta(minutes=n)
         time.sleep(5)
 
-def thread_loop(stocks):
+
+def thread_loop():
     pool = multiprocessing.Pool(len(stocks))
     pool.map(fill_data, stocks)
     # pool.close()
@@ -72,12 +72,24 @@ def dict_to_pandas():
     df = pd.DataFrame.from_records(di)
     df.to_csv("test.csv")
 
+def add_headers(csv_path):
+    path = './kite_historical_data/' + csv_path
+    file = pd.read_csv(path)
+    # adding header
+    headerList = ['date','open','high','low','close','volume','oi']
+    # converting data frame to csv
+    file.to_csv(path, header=headerList, index=False)
+
+
+def read_and_all_header():
+    read_all_csv_in_dir('./kite_historical_data', add_headers)
 
 if __name__ == "__main__":
     # kite = KiteConnect(api_key=api_key)
     # print(kite.login_url())
     # login()
     # asyncio.run(fill_data())
-    for chunk in pd.read_csv('./temp/instruments.csv', chunksize=10):
-        thread_loop(chunk.to_dict('records'))
-    
+    # thread_loop()
+    # dict_to_pandas()
+    # fill_data2()
+    read_and_all_header()
