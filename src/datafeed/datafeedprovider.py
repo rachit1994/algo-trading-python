@@ -1,5 +1,5 @@
 import os
-from src.SQLAlchemy import SourceSqlalchemy
+from lib.database.SQLAlchemy import SourceSqlalchemy
 from lib.entities.StockData import StockData
 from lib.entities.Candle import Candle
 import time
