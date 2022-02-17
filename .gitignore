@@ -1,6 +1,5 @@
 __pycache__
 venv/
-config/
 build/
 dist/
 **/**.egg-info
