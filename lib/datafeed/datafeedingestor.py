@@ -1,7 +1,7 @@
 import os
 from constants.common import CSV_PATH
 import pandas as pd
-from config.database.SQLAlchemy import TargetSqlalchemy
+from src.SQLAlchemy import TargetSqlalchemy
 import time
 chunksize = 10**4 
 at = '@'
