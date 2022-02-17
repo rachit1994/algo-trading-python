@@ -40,11 +40,10 @@ class localfeed():
         elif interval==60:
          base=15
         elif interval==1440:
-         base=555
-
+         base=1440
        
         df = self.df.set_index('datetime').resample(
-             interval.__str__()+'min', base=base).mean().dropna()
+             'D', base=base).mean().dropna()
 
         return df
 
