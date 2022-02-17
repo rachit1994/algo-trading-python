@@ -12,4 +12,3 @@ venv/
 **/*.log
 temp/
 .DS_Store
-config/
