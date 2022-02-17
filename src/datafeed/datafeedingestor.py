@@ -5,10 +5,7 @@ from lib.database.SQLAlchemy import TargetSqlalchemy
 import time
 
 chunksize = 10**4 
-at = '@'
-colon = ':'
-slash = '/'
-mysql = 'mysql+mysqlconnector://'
+
 counterstart=1
 counterend=1
 
