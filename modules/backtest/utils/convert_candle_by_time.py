@@ -1,8 +1,8 @@
 from .stock_data import *
 
 def interval_to_number(interval):
-    m = {"minute": 1, "day": 1440, "3minute": 3, "5minute": 5, "10minute": 10, "15minute": 15, "30minute": 30,
-         "60minute": 60}
+    m = {"minute": 1, "day": 1440, "3minute": 3, "3min": 3, "5minute": 5, "5min": 5, "10minute": 10, "10min": 10, "15minute": 15, "15min": 15, "30minute": 30, "30min": 30,
+         "60minute": 60, "60min": 60 }
     return m[interval]
 
 def alttf_to_tf_factor(interval, altinterval):

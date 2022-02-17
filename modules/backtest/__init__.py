@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import backtrader as bt                        
 import backtest.feeds 
-import backtest.strategies
+import strategies
 import backtest.analyzers
 from backtest.engine import engine as engine
 
