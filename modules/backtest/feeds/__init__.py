@@ -1,4 +1,4 @@
-from lib.datafeed.localfeed import localfeed 
+from .localfeed import * 
 
 def pull(instrumenttype, symbol, tf):
     mode = "local_back_test"

@@ -6,7 +6,7 @@ cerebro = btest.bt.Cerebro()  # create a "Cerebro" engine instance
 
 # Create a data feed
 
-dataframe = btest.feeds.pull("STOCK", "TCS", "15min")
+dataframe = btest.feeds.pull("STOCK", "TCS", "15minute")
 data = btest.bt.feeds.PandasData(dataname=dataframe.df)
 
 cerebro.adddata(data)  # Add the data feed

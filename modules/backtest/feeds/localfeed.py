@@ -2,59 +2,61 @@ import os
 from src.SQLAlchemy import SourceSqlalchemy
 import time
 import pandas as pd
+from backtest.utils.convert_candle_by_time import *
 
 
 class localfeed():
       
       currentpointer=-1
       df=None
-
-      def __init__(cls,instrumentype,symbol):
-          if instrumentype=="STOCK":
-            sourcedbsession, sourcedbengine = SourceSqlalchemy()
-            with sourcedbengine.connect() as con:
-                cls.df = pd.read_sql('SELECT * FROM '+symbol+' LIMIT 20', con)
-                cls.df["IS_UP"]= cls.df["CLOSE"] > cls.df["OPEN"]
-                cls.df["IS_DOWN"]= cls.df["CLOSE"] < cls.df["OPEN"] 
-                cls.currentpointer=0
-                con.close()
-
-      def __getitem__(self, index):
-        try:
-            return self.df.loc[self.currentpointer+index]
-        except Exception as e:
-              return None
-
-      @property
-      def next(self):
-          self.currentpointer=self.currentpointer+1
-          try:
-            return self.df.loc[self.currentpointer]
-          except Exception as e:
-            return None
-
-      @property
-      def previous(self):
-          try:
-            self.currentpointer=self.currentpointer-1
-            return self.df.loc[self.currentpointer]
-          except Exception as e:
-            return None
-
-
       
 
+      def __init__(cls,instrumentype,symbol, tf):
+          num_candles=200
+          if instrumentype=="STOCK":
+            interval =  360 if interval_to_number(tf) == 1440 else interval_to_number(tf)
+
+            sourcedbsession, sourcedbengine = SourceSqlalchemy()
+            with sourcedbengine.connect() as con:
+                df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
+                #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT 720', con)
+                df['datetime']=pd.to_datetime(df['datetime'])  
+                cls.df = df
+                cls.df = cls.groupby(interval)
+                cls.currentpointer=0               
+                con.close()
+
+    
+
+      def groupby(self, interval):
+
+        if interval==1 or interval==3 or interval==5 or interval==15:
+         base=0
+        elif interval==10:
+         base=5 
+        elif interval==30:
+         base=15
+        elif interval==60:
+         base=15
+        elif interval==360:
+         base=555
+         df = self.df.set_index('datetime').resample(
+             '1440min', base=base).mean().dropna()
+         return df
+
+        df = self.df.set_index('datetime').resample(
+             interval.__str__()+'min', base=base).mean().dropna()
+            
+
+        return df
+
 if __name__ == '__main__':
-    obj = localfeed("STOCK","TCS")
-    print(obj[2])
-    print(obj[-2])
-    obj.next
-    print(obj[0])
+    obj = localfeed("STOCK","TCS", "15minute")
+    #print(obj.df)
+   
    
     
    # modes - live and backtesting
    # live 200 candles max previous - 200
    # default backtest day's candles max previous - 200 implement queue
    # 
-
-
