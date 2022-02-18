@@ -1,4 +1,4 @@
-import backtest as btest
+import modules.backtest as btest
 import pandas as pd
 # import yfinance as yf
 
