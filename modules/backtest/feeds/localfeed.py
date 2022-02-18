@@ -2,7 +2,7 @@ import os
 from lib.database.SQLAlchemy import SourceSqlalchemy
 import time
 import pandas as pd
-from backtest.utils.convert_candle_by_time import *
+from ..utils.convert_candle_by_time import *
 
 
 class localfeed():

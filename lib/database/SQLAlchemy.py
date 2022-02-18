@@ -2,6 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 from config.db import db_url
+
+
 class SourceSqlalchemy(Session):
     session_factory = None
     base = declarative_base()
