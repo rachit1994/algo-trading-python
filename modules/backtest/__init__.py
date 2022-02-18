@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function,
 
 import backtrader as bt                        
 from .feeds import *
-from .strategy import *
 from .analyzers import *
 
 # mode can be local or live
