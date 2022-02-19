@@ -11,7 +11,7 @@ class localfeed():
       df=None
       
 
-      def __init__(cls,instrumentype,symbol, tf):
+      def __init__(self,instrumentype,symbol, tf):
           num_candles=200
           if instrumentype=="STOCK":
             interval =  360 if interval_to_number(tf) == 1440 else interval_to_number(tf)
@@ -21,9 +21,9 @@ class localfeed():
                 df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
                 #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT 720', con)
                 df['datetime']=pd.to_datetime(df['datetime'])  
-                cls.df = df
-                cls.df = cls.groupby(interval)
-                cls.currentpointer=0               
+                self.df = df
+                self.df = self.groupby(interval)
+                self.currentpointer=0               
                 con.close()
 
     
@@ -50,8 +50,8 @@ class localfeed():
 
         return df
 
-if __name__ == '__main__':
-    obj = localfeed("STOCK","TCS", "15minute")
+# if __name__ == '__main__':
+#     obj = localfeed("STOCK","TCS", "15minute")
     #print(obj.df)
    
    

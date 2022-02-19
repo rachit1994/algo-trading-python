@@ -1,4 +1,4 @@
-export PYTHONPATH="${PYTHONPATH}:/Developer/algoTrading/scratch
+export PYTHONPATH="/Users/rachitsrivastava/Developer/algoTrading/scratch:$PYTHONPATH"                                                                                                                                          ─╯
 
 Folder structure
 
