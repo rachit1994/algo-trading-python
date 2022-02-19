@@ -1,7 +1,6 @@
 import pandas as pd
 from constants.common import CSV_PATH, mode
 from datetime import datetime
-from utils.read_csv import get_historical_data_from_csv
 
 def get_ticks_between_times(symbol, from_date, to_date):
     if mode == 'back_test':

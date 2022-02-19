@@ -11,4 +11,4 @@ venv/
 **/__pycache__
 **/*.log
 temp/
-.DS_Store
+*/*.DS_Store
