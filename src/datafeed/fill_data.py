@@ -1,6 +1,6 @@
 import logging
 from kiteconnect import KiteConnect
-from config.kite import api_key, request_token, api_secret, tokens_list, access_token, stocks
+from config.kite import api_key, request_token, api_secret, tokens_list, access_token
 import pandas as pd
 import datetime
 from datetime import timedelta
@@ -11,13 +11,6 @@ from dateutil.relativedelta import relativedelta
 from lib.utils.read_csv import read_all_csv_in_dir
 
 logging.basicConfig(level=logging.DEBUG)
-
-# Redirect the user to the login url obtained
-# from kite.login_url(), and receive the request_token
-# from the registered redirect url after the login flow.
-# Once you have the request_token, obtain the access_token
-# as follows.
-
 
 def login():
     kite = KiteConnect(api_key=api_key)
@@ -35,10 +28,18 @@ def fill_data(stock):
     kite = KiteConnect(api_key=api_key)
     kite.set_access_token(access_token)
     given_time = datetime.datetime.strptime(time_str, date_format_str)
+    file_path = "./kite_historical_data/"+ stock["tradingsymbol"] + ".csv"
+    if exists(file_path) and not os.stat(file_path).st_size == 0:
+        df1 = pd.read_csv(file_path, header=None, delim_whitespace=True)
+        print(stock["tradingsymbol"] , df1.empty)
+        if not df1.empty:
+            last_row =  df1.iloc[-1]
+            time_str = last_row[0]
+            given_time = pd.to_datetime(time_str) + timedelta(minutes=1)
     final_time = given_time + timedelta(minutes=n)
     while final_time <= now:
         data = kite.historical_data(
-            instrument_token=stock["instrumenttoken"], from_date=given_time, oi=True, to_date=final_time, interval="minute")
+            instrument_token=str(stock["instrument_token"]), from_date=given_time, oi=True, to_date=final_time, interval="minute")
         print("filling : ", stock["tradingsymbol"])
         print("data : ", len(data))
         df = pd.DataFrame.from_records(data)
@@ -52,7 +53,7 @@ def fill_data(stock):
 def thread_loop():
     pool = multiprocessing.Pool(len(stocks))
     pool.map(fill_data, stocks)
-    pool.close()
+    # pool.close()
 
 def print_data():
     n = 100
