@@ -1,7 +1,7 @@
 # Create a subclass of Strategy to define the indicators and logic
-import backtrader as bt
+import modules.backtest as btest
 
-class SmaCrossover(bt.Strategy):
+class SmaCrossover(btest.bt.Strategy):
     # list of parameters which are configurable for the strategy
     params = dict(
         pfast=10,  # period for the fast moving average
@@ -11,9 +11,9 @@ class SmaCrossover(bt.Strategy):
     alias = ("SMACROSSOVER", "SmaCrossover")
 
     def __init__(self):
-        sma1 = bt.ind.SMA(period=self.p.pfast)  # fast moving average
-        sma2 = bt.ind.SMA(period=self.p.pslow)  # slow moving average
-        self.crossover = bt.ind.CrossOver(sma1, sma2)  # crossover signal
+        sma1 = btest.bt.ind.SMA(period=self.p.pfast)  # fast moving average
+        sma2 = btest.bt.ind.SMA(period=self.p.pslow)  # slow moving average
+        self.crossover = btest.bt.ind.CrossOver(sma1, sma2)  # crossover signal
 
     def next(self):
         if not self.position:  # not in the market

@@ -22,7 +22,7 @@ class CSVDataFeedIngestor():
             for file in files:
                 print("counter -> "+ counter.__str__())
                 print("file -> "+ file)
-                if (file).endswith(".csv") and counter >= counterstart and  counter <= counterend:
+                if (file).endswith(".csv"):
                     filenamewithoutextension=file.replace(".csv", "")
                     print(CSV_PATH+filenamewithoutextension)
                     self.createTable(filenamewithoutextension, targetdbengine)
@@ -60,7 +60,7 @@ class CSVDataFeedIngestor():
                                         "%Y-%m-%d %H:%M:%S"))
             chunk.columns = ['TIMESTAMP', 'OPEN', 'HIGH', 'LOW','CLOSE', 'VOLUME', 'OI']
             chunk.to_sql(tableName, con=dbengine.connect(), schema='GOMARK_ONEMIN_TICK_DATA',
-                                             if_exists='append', index=True, )
+                                             if_exists='append', index=True, method="multi")
             print("Insertion for table "+tableName+" finished at --> " + time.strftime(
                                         "%Y-%m-%d %H:%M:%S"))
         except Exception as e:
