@@ -13,14 +13,20 @@ class localfeed():
 
       def __init__(cls,instrumentype,symbol, tf):
           num_candles=200
+          from_data = "2022-01-01 09:00:00+05:30"
+          to_data = "2022-02-01 16:00:00+05:30"
           if instrumentype=="STOCK":
             interval =  360 if interval_to_number(tf) == 1440 else interval_to_number(tf)
 
             sourcedbsession, sourcedbengine = SourceSqlalchemy()
             with sourcedbengine.connect() as con:
-                df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
+                df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' WHERE TIMESTAMP >= "'+from_data+'" AND TIMESTAMP<="'+to_data+'"', con)
+                #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
                 #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT 720', con)
                 df['datetime']=pd.to_datetime(df['datetime'])  
+                
+                # df["is_up"]= df["CLOSE"] >= df["OPEN"]
+                # df["isdown"]= df["CLOSE"] < df["OPEN"]
                 cls.df = df
                 cls.df = cls.groupby(interval)
                 cls.currentpointer=0               
@@ -46,8 +52,7 @@ class localfeed():
 
         df = self.df.set_index('datetime').resample(
              interval.__str__()+'min', base=base).mean().dropna()
-            
-
+        #print(df)         
         return df
 
 if __name__ == '__main__':
