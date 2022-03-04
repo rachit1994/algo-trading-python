@@ -11,7 +11,7 @@ class SourceSqlalchemy(Session):
     def __new__(cls, *args, **kwargs):
         if cls.session_factory is None:
             # For localhost
-            engine = create_engine(db_url, max_identifier_length=128, pool_size=20, max_overflow=100)
+            engine = create_engine(db_url)
             cls.session_factory = sessionmaker(bind=engine, autocommit=False)
             cls.base = declarative_base(bind=engine)
 
@@ -27,7 +27,7 @@ class TargetSqlalchemy(Session):
     def __new__(cls, *args, **kwargs):
         if cls.session_factory is None:
             # For localhost
-            engine = create_engine(db_url, max_identifier_length=128, pool_size=20, max_overflow=100)
+            engine = create_engine(db_url)
             cls.session_factory = sessionmaker(bind=engine, autocommit=False)
             cls.base = declarative_base(bind=engine)
 
