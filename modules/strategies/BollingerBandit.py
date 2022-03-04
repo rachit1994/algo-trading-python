@@ -39,12 +39,12 @@ class BollingerBandit(bt.Strategy):
 
         else:
             self.liqDays = self.liqDays - 1;
-            avgClose= bt.ind.Average(self.data.close,self.liqDays)
-            if self.MarketPosition == 1 and avgClose < self.upBand :
+            avgClose= bt.ind.Average(self.data.close,period=self.liqDays)
+            if self.MarketPosition == 1 and [avgClose < self.upBand]:
                  print("self.exit at  -> "+ self.data.close.__str__())
                  self.sell()
                  self.MarketPosition =0
-            elif self.MarketPosition == -1 and avgClose > self.dnBand :
+            elif self.MarketPosition == -1 and [avgClose > self.dnBand] :
                  print("self.exit at  -> "+ self.data.close.__str__())
                  self.buy()
                  self.MarketPosition =0
