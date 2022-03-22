@@ -13,8 +13,8 @@ class localfeed():
 
       def __init__(self,instrumentype,symbol, tf):
           num_candles=200
-          from_data = "2022-01-01 09:00:00+05:30"
-          to_data = "2022-02-01 16:00:00+05:30"
+          from_data = "2022-01-03 09:00:00+05:30"
+          to_data = "2022-01-07 16:00:00+05:30"
           if instrumentype=="STOCK":
             interval =  360 if interval_to_number(tf) == 1440 else interval_to_number(tf)
 
