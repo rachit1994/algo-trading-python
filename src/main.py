@@ -48,7 +48,8 @@ portvalue = cerebro.broker.getvalue()
 print('Final Portfolio Value: ${}'.format(portvalue))
 
 #Finally plot the end results
-cerebro.plot()
+#cerebro.plot()
+
 #cerebro.plot(style='candlestick')
 
 # cerebro.addanalyzer(btest.analyzers.tradelist, _name="tradelist")
