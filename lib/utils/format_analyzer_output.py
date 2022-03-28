@@ -28,7 +28,7 @@ def printTradeAnalysis(analyzer, strategyName,symbol,from_date, to_date):
     #Print the rows
     print_list = [h1,r1,h2,r2]
     row_format ="{:<15}" * (header_length + 1)
-    print("Trade Analysis Results:")
+    print("Trade Analysis Results for Symbol:"+symbol)
     for row in print_list:
         print(row_format.format('',*row))
 
