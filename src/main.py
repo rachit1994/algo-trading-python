@@ -17,7 +17,7 @@ for symbol in symbols:
     to_date= ""
     # Create a data feed
 
-    from_date = "2022-01-01 09:00:00+05:30"
+    from_date = "2020-01-01 09:00:00+05:30"
     to_date = "2022-02-28 16:00:00+05:30"
     dataframe = btest.feeds.pull("STOCK",symbol, "15minute", fromDate=from_date, toDate=to_date)
 
@@ -50,7 +50,7 @@ for symbol in symbols:
     portvalue = cerebro.broker.getvalue()
 
     #Print out the final result
-    print('Final Portfolio Value: ${}'.format(portvalue))
+    print('Final Portfolio Value : ${}'.format(portvalue))
 
 #Finally plot the end results
 #cerebro.plot()
