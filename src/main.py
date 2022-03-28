@@ -21,7 +21,7 @@ for symbol in symbols:
     to_date = "2022-02-28 16:00:00+05:30"
     dataframe = btest.feeds.pull("STOCK",symbol, "15minute", fromDate=from_date, toDate=to_date)
 
-    #dataframe = btest.feeds.pull("STOCK",symbol, "15minute") 
+    #dataframe = btest.feeds.pull("STOCK",symbol, "15minute") # Use this for running backtest on full dataset
 
     data = btest.bt.feeds.PandasData(dataname=dataframe.df)
 
