@@ -7,10 +7,17 @@ from lib.utils.format_analyzer_output import *
 cerebro = btest.bt.Cerebro()  # create a "Cerebro" engine instance
 #Variable for our starting cash
 startcash = 100000
-
+from_date = ""
+to_date=""
 # Create a data feed
+symbol = "TCS"
 
-dataframe = btest.feeds.pull("STOCK","TCS", "15minute")
+from_date = "2021-01-01 09:00:00+05:30"
+to_date = "2022-02-28 16:00:00+05:30"
+dataframe = btest.feeds.pull("STOCK",symbol, "15minute", from_date, to_date)
+
+#dataframe = btest.feeds.pull("STOCK",symbol, "15minute") 
+
 data = btest.bt.feeds.PandasData(dataname=dataframe.df)
 
 cerebro.adddata(data)  # Add the data feed
@@ -23,22 +30,26 @@ cerebro.addstrategy(strategy.BollBand)
 cerebro.broker.setcash(startcash)
 # Add analyzers 
 cerebro.addanalyzer(btest.analyzers.TradeAnalyzer, _name="ta")
+cerebro.addanalyzer(btest.analyzers.tradelist, _name="tradelist")
 
-strategies = cerebro.run()
+strategies = cerebro.run(tradehistory=True)
 
 
 firstStrat = strategies[0]
 
 # print the analyzers
-printTradeAnalysis(firstStrat.analyzers.ta.get_analysis())
+printTradeAnalysis(firstStrat.analyzers.ta.get_analysis(),"BollingerBandidt",symbol, from_date.split(" ")[0], to_date.split(" ")[0])
+export_trade_list(firstStrat.analyzers.getbyname("tradelist").get_analysis(),"BollingerBandit",symbol, from_date.split(" ")[0], to_date.split(" ")[0])
 
 #Get final portfolio Value
 portvalue = cerebro.broker.getvalue()
 
 #Print out the final result
 print('Final Portfolio Value: ${}'.format(portvalue))
+
 #Finally plot the end results
-cerebro.plot(style='candlestick')
+cerebro.plot()
+#cerebro.plot(style='candlestick')
 
 # cerebro.addanalyzer(btest.analyzers.tradelist, _name="tradelist")
 # #cerebro.run() 

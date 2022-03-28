@@ -29,11 +29,11 @@ class BollingerBandit(bt.Strategy):
         if(self.MarketPosition == 0) :             
 
             if self.rocCalc > 0 and self.avgClose > self.upBand:
-                print("self.buy at -> "+ self.data.close[0].__str__())
+                print("self.sell at -> "+ self.data.close[0].__str__())
                 self.sell()
                 self.MarketPosition=1
             elif self.rocCalc < 0 and self.avgClose < self.dnBand:
-                 print("self.sell at -> "+ self.data.close[0].__str__())
+                 print("self.buy at -> "+ self.data.close[0].__str__())
                  self.buy()
                  self.MarketPosition=-1
 

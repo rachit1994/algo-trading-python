@@ -11,16 +11,19 @@ class localfeed():
       df=None
       
 
-      def __init__(self,instrumentype,symbol, tf):
+      def __init__(self,instrumentype,symbol, tf, fromDate, toDate):
           num_candles=200
-          from_data = "2022-01-03 09:00:00+05:30"
-          to_data = "2022-01-07 16:00:00+05:30"
+          if fromDate is None or toDate is None:
+            query='SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' WHERE 1=1 '
+          else:
+            query='SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' WHERE TIMESTAMP >= "'+fromDate+'" AND TIMESTAMP<="'+toDate+'"'
+          
           if instrumentype=="STOCK":
             interval =  360 if interval_to_number(tf) == 1440 else interval_to_number(tf)
 
             sourcedbsession, sourcedbengine = SourceSqlalchemy()
             with sourcedbengine.connect() as con:
-                df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' WHERE TIMESTAMP >= "'+from_data+'" AND TIMESTAMP<="'+to_data+'"', con)
+                df = pd.read_sql(query, con)
                 #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
                 #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT 720', con)
                 df['datetime']=pd.to_datetime(df['datetime'])  
