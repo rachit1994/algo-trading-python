@@ -10,7 +10,7 @@ def read_csv(file_path, callback, *argv):
             break
 
 def get_historical_data_from_csv(file_path):
-    return pd.read_csv(file_path, parse_dates=['TIME', 'Date', 'TIME1'], infer_datetime_format=True, index_col=0)
+    return pd.read_csv(file_path, parse_dates=['date'], infer_datetime_format=True, index_col=0)
 
 def read_all_csv_in_dir(path, cb):
     for root,dirs,files in os.walk(path):

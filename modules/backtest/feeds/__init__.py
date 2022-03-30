@@ -1,4 +1,5 @@
 from .localfeed import * 
+from .localcsvfeed import *
 
 
 def pull(instrumenttype, symbol, tf, **kwargs):
@@ -10,8 +11,9 @@ def pull(instrumenttype, symbol, tf, **kwargs):
             fromDate = value
         elif key == 'toDate':
             toDate = value
-        print ("%s == %s" %(key, value))
+        #print ("%s == %s" %(key, value))
 
     if mode=="local_back_test":
 
-        return localfeed(instrumenttype, symbol, tf, fromDate, toDate)
+        #return localfeed(instrumenttype, symbol, tf, fromDate, toDate)
+        return localcsvfeed(instrumenttype, symbol, tf, fromDate, toDate)

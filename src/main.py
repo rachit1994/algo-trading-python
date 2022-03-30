@@ -5,21 +5,23 @@ from lib.utils.format_analyzer_output import *
 # import yfinance as yf
 
 symbol=""
-symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK","BAJAJ-AUTO","BAJAJFINSV","BAJFINANCE"]
-symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK"]
-
+from_date = "2021-01-01 09:00:00+05:30"
+to_date = "2021-12-31 16:00:00+05:30"
+timeframe = "15minute"
+#Variable for our starting cash
+startcash = 100000
+strategyName="BollingerBandidt"
+# symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK","BAJAJAUTO","BAJAJFINSV","BAJFINANCE"]
+symbols = ["ADANIPORTS","ASIANPAINT"]
+#symbols = pd.read_csv('temp/SYMBOLS.csv', index_col=0)
+# print (symbols)
+#for symbol in symbols.index:
 for symbol in symbols:
-
+    print("Running strategy for symbol -> "+symbol)
     cerebro = btest.bt.Cerebro()  # create a "Cerebro" engine instance
-    #Variable for our starting cash
-    startcash = 100000
-    from_date = ""
-    to_date= ""
+    
     # Create a data feed
-
-    from_date = "2020-01-01 09:00:00+05:30"
-    to_date = "2022-02-28 16:00:00+05:30"
-    dataframe = btest.feeds.pull("STOCK",symbol, "15minute", fromDate=from_date, toDate=to_date)
+    dataframe = btest.feeds.pull("STOCK",symbol, timeframe, fromDate=from_date, toDate=to_date)
 
     #dataframe = btest.feeds.pull("STOCK",symbol, "15minute") # Use this for running backtest on full dataset
 
@@ -45,12 +47,14 @@ for symbol in symbols:
     # print the analyzers
     printTradeAnalysis(firstStrat.analyzers.ta.get_analysis(),"BollingerBandidt",symbol, from_date.split(" ")[0], to_date.split(" ")[0])
     export_trade_list(firstStrat.analyzers.getbyname("tradelist").get_analysis(),"BollingerBandit",symbol, from_date.split(" ")[0], to_date.split(" ")[0])
-
+   
     #Get final portfolio Value
     portvalue = cerebro.broker.getvalue()
 
     #Print out the final result
     print('Final Portfolio Value : ${}'.format(portvalue))
+
+export_trade_summary(strategyName,from_date.split(" ")[0], to_date.split(" ")[0])
 
 #Finally plot the end results
 #cerebro.plot()
