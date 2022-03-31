@@ -21,6 +21,8 @@ class localfeed():
                 df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
                 #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT 720', con)
                 df['datetime']=pd.to_datetime(df['datetime'])  
+                df["is_up"]= [df["close"] >= df["open"]]
+                df["isdown"]= [df["close"] < df["open"]]
                 cls.df = df
                 cls.df = cls.groupby(interval)      
 

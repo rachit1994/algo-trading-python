@@ -1,11 +1,11 @@
 import os
-from lib.database.SQLAlchemy import SourceSqlalchemy
 import time
 import pandas as pd
 from lib.utils.convert_candle_by_time import *
+from lib.utils.read_csv import *
+from constants.common import CSV_PATH
 
-
-class localfeed():
+class localcsvfeed():
       
       currentpointer=-1
       df=None
@@ -13,25 +13,18 @@ class localfeed():
 
       def __init__(self,instrumentype,symbol, tf, fromDate, toDate):
           num_candles=200
-          if fromDate is None or toDate is None:
-            query='SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' WHERE 1=1 '
-          else:
-            query='SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' WHERE TIMESTAMP >= "'+fromDate+'" AND TIMESTAMP<="'+toDate+'"'
-          
+         
           if instrumentype=="STOCK":
             interval =  360 if interval_to_number(tf) == 1440 else interval_to_number(tf)
-
-            sourcedbsession, sourcedbengine = SourceSqlalchemy()
-            with sourcedbengine.connect() as con:
-                df = pd.read_sql(query, con)
-                #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT '+(num_candles*interval).__str__(), con)
-                #df = pd.read_sql('SELECT TIMESTAMP as datetime, OPEN, HIGH, LOW, CLOSE, VOLUME, OI as openinterest FROM '+symbol+' LIMIT 720', con)
-                df['datetime']=pd.to_datetime(df['datetime'])  
+            df=pd.read_csv(CSV_PATH+symbol+'.csv')
+            #df['datetime']=pd.to_datetime(df['date'])  
+            df.insert(0, 'datetime', pd.to_datetime(df['date']))
+            df = df[df.datetime.between(fromDate, toDate)]
+            df.drop(columns =['date'])
           
-                self.df = df
-                self.df = self.groupby(interval)
-                self.currentpointer=0  
-                con.close()
+            self.df = df
+            self.df = self.groupby(interval)
+            self.currentpointer=0  
 
     
 
