@@ -15,5 +15,5 @@ def pull(instrumenttype, symbol, tf, **kwargs):
 
     if mode=="local_back_test":
 
-        return localfeed(instrumenttype, symbol, tf, fromDate, toDate)
+        #return localfeed(instrumenttype, symbol, tf, fromDate, toDate)
         return localcsvfeed(instrumenttype, symbol, tf, fromDate, toDate)
