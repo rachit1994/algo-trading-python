@@ -28,9 +28,14 @@ class tradelist(bt.Analyzer):
             priceout = trade.history[len(trade.history)-1].event.price
             datein = bt.num2date(trade.history[0].status.dt)
             dateout = bt.num2date(trade.history[len(trade.history)-1].status.dt)
+            timein = None
+            timeout = None
             if trade.data._timeframe >= bt.TimeFrame.Days:
+                timein=datein.time().strftime('%H:%M:%S')
+                timeout=dateout.time().strftime('%H:%M:%S')
                 datein = datein.date()
                 dateout = dateout.date()
+                
 
             pcntchange = 100 * priceout / pricein - 100
             pnl = trade.history[len(trade.history)-1].status.pnlcomm
@@ -57,7 +62,7 @@ class tradelist(bt.Analyzer):
                 mae = -hp
 
             self.trades.append({'ref': trade.ref, 'ticker': trade.data._name, 'dir': dir,
-                 'datein': datein, 'pricein': pricein, 'dateout': dateout, 'priceout': priceout,
+                 'datein': datein,'timein':timein, 'pricein': pricein, 'dateout': dateout,'timeout':timeout, 'priceout': priceout,
                  'chng%': round(pcntchange, 2), 'pnl': pnl, 'pnl%': round(pnlpcnt, 2),
                  'size': size, 'value': value, 'cumpnl': self.cumprofit,
                  'nbars': barlen, 'pnl/bar': round(pbar, 2),

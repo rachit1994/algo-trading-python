@@ -1,6 +1,7 @@
 import pandas as pd
 import glob
 import os
+import datetime
 
 def printTradeAnalysis(analyzer, strategyName,symbol,from_date, to_date):
     '''
@@ -46,9 +47,20 @@ def export_csv(c1,d1,strategyName,symbol,from_date, to_date):
 
 
 def export_trade_list(trade_list,strategyName,symbol,from_date, to_date):
-    df = pd.DataFrame(trade_list)
-    df = df.drop(['pnl', 'pnl/bar', 'ticker'], axis=1)
-    df.to_csv("temp/Trade_List_"+strategyName+"_"+symbol+"_"+from_date+"_to_"+to_date+".csv",index=False)
+    df = pd.DataFrame(trade_list) 
+    df.insert(0, 'formatteddatein', pd.to_datetime(df['datein']))
+    df1 = df.groupby(
+            [df.formatteddatein.dt.strftime('%b %Y')]
+        )['pnl%'].mean().reset_index(name='Monthly Average PnL')
+    #print(df1)
+    totalavgpnlpercent=round(df1['Monthly Average PnL'].mean(),5)
+    #print(round(totalavgpnlpercent,5))
+    df = df.drop(['pnl', 'pnl/bar', 'ticker', 'formatteddatein'], axis=1)
+    #print(df)
+    if totalavgpnlpercent <= 0 :
+        df.to_csv("temp/Trade_List_"+strategyName+"_"+symbol+"_L_"+abs(totalavgpnlpercent).__str__()+"_"+from_date+"_to_"+to_date+".csv",index=False)
+    else:
+         df.to_csv("temp/Trade_List_"+strategyName+"_"+symbol+"_P_"+abs(totalavgpnlpercent).__str__()+"_"+from_date+"_to_"+to_date+".csv",index=False)
 
 
 def export_trade_summary(strategyName,from_date, to_date):
