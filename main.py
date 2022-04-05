@@ -12,7 +12,7 @@ timeframe = "15minute"
 startcash = 100000
 strategyName="BollingerBandit"
 # symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK","BAJAJAUTO","BAJAJFINSV","BAJFINANCE"]
-symbols = ["ADANIPORTS"]
+symbols = ["ADANIPORTS","ASIANPAINT"]
 #symbols = pd.read_csv('temp/SYMBOLS.csv', index_col=0)
 # print (symbols)
 #for symbol in symbols.index:
@@ -45,8 +45,8 @@ for symbol in symbols:
     firstStrat = strategies[0]
 
     # print the analyzers
-    printTradeAnalysis(firstStrat.analyzers.ta.get_analysis(),"BollingerBandidt",symbol, from_date.split(" ")[0], to_date.split(" ")[0])
-    export_trade_list(firstStrat.analyzers.getbyname("tradelist").get_analysis(),"BollingerBandit",symbol, from_date.split(" ")[0], to_date.split(" ")[0])
+    printTradeAnalysis(firstStrat.analyzers.ta.get_analysis(),strategyName,symbol, from_date.split(" ")[0], to_date.split(" ")[0])
+    export_trade_list(firstStrat.analyzers.getbyname("tradelist").get_analysis(),strategyName,symbol, from_date.split(" ")[0], to_date.split(" ")[0])
    
     #Get final portfolio Value
     portvalue = cerebro.broker.getvalue()

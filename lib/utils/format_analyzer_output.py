@@ -38,17 +38,22 @@ def printTradeAnalysis(analyzer, strategyName,symbol,from_date, to_date):
     export_csv(c1,d1,strategyName,symbol,from_date, to_date)
 
 def export_csv(c1,d1,strategyName,symbol,from_date, to_date):
-   
+    path= "temp/"+strategyName
+    try:
+     os.mkdir(path)
+    except FileExistsError as e:
+        print("Folder already exists")
     df1 = pd.DataFrame([d1], index=[0], columns=c1)
     #df1["Symbol"]=symbol
     df1.insert(0, 'Symbol', symbol)
     # print(df1)
-    df1.to_csv("temp/Trade_Summary_"+strategyName+"_"+symbol+"_"+from_date+"_to_"+to_date+".csv",index=False)
+    df1.to_csv("temp/"+strategyName+"/Trade_Summary_"+symbol+"_"+from_date+"_to_"+to_date+".csv",index=False)
 
 
 def export_trade_list(trade_list,strategyName,symbol,from_date, to_date):
     df = pd.DataFrame(trade_list) 
     df.insert(0, 'formatteddatein', pd.to_datetime(df['datein']))
+    path= "temp/"+strategyName
     df1 = df.groupby(
             [df.formatteddatein.dt.strftime('%b %Y')]
         )['pnl%'].mean().reset_index(name='Monthly Average PnL')
@@ -57,15 +62,16 @@ def export_trade_list(trade_list,strategyName,symbol,from_date, to_date):
     #print(round(totalavgpnlpercent,5))
     df = df.drop(['pnl', 'pnl/bar', 'ticker', 'formatteddatein'], axis=1)
     #print(df)
+    
     if totalavgpnlpercent <= 0 :
-        df.to_csv("temp/Trade_List_"+strategyName+"_"+symbol+"_L_"+abs(totalavgpnlpercent).__str__()+"_"+from_date+"_to_"+to_date+".csv",index=False)
+        df.to_csv(path+"/Trade_List_"+symbol+"_L_"+abs(totalavgpnlpercent).__str__()+"_"+from_date+"_to_"+to_date+".csv",index=False)
     else:
-         df.to_csv("temp/Trade_List_"+strategyName+"_"+symbol+"_P_"+abs(totalavgpnlpercent).__str__()+"_"+from_date+"_to_"+to_date+".csv",index=False)
+         df.to_csv(path+"/Trade_List_"+symbol+"_P_"+abs(totalavgpnlpercent).__str__()+"_"+from_date+"_to_"+to_date+".csv",index=False)
 
 
 def export_trade_summary(strategyName,from_date, to_date):
     # setting the path for joining multiple files
-    files = os.path.join("temp/", "Trade_Summary*.csv")
+    files = os.path.join("temp/"+strategyName, "Trade_Summary*.csv")
 
     # list of merged files returned
     files = glob.glob(files)
@@ -75,7 +81,7 @@ def export_trade_summary(strategyName,from_date, to_date):
     # joining files with concat and read_csv
     df = pd.concat(map(pd.read_csv, files), ignore_index=True)
     #print(df)
-    df.to_csv("temp/Trade_Summary_"+strategyName+"_"+from_date+"_to_"+to_date+".csv",index=False)
+    df.to_csv("temp/"+strategyName+"/Trade_Summary_"+from_date+"_to_"+to_date+".csv",index=False)
 
 
 #export_trade_summary("BollingerBandit","2020-01-01","2022-01-01")
