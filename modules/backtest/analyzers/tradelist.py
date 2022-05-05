@@ -63,7 +63,7 @@ class tradelist(bt.Analyzer):
 
             self.trades.append({'ref': trade.ref, 'ticker': trade.data._name, 'dir': dir,
                  'datein': datein,'timein':timein, 'pricein': pricein, 'dateout': dateout,'timeout':timeout, 'priceout': priceout,
-                 'chng%': round(pcntchange, 2), 'pnl': pnl, 'pnl%': round(pnlpcnt, 2),
+                 'chng%': round(pcntchange, 2), 'pnl': pnl, 'pnl%': round(pnlpcnt, 5),
                  'size': size, 'value': value, 'cumpnl': self.cumprofit,
                  'nbars': barlen, 'pnl/bar': round(pbar, 2),
                  'mfe%': round(mfe, 2), 'mae%': round(mae, 2)})

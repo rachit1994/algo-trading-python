@@ -5,14 +5,14 @@ from lib.utils.format_analyzer_output import *
 # import yfinance as yf
 
 symbol=""
-from_date = "2021-10-01 09:00:00+05:30"
+from_date = "2021-12-01 09:00:00+05:30"
 to_date = "2021-12-31 16:00:00+05:30"
 timeframe = "15minute"
 #Variable for our starting cash
 startcash = 100000
 strategyName="BollingerBandit"
 # symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK","BAJAJAUTO","BAJAJFINSV","BAJFINANCE"]
-symbols = ["ADANIPORTS","ASIANPAINT"]
+symbols = ["ASIANPAINT"]
 #symbols = pd.read_csv('temp/SYMBOLS.csv', index_col=0)
 # print (symbols)
 #for symbol in symbols.index:

@@ -23,18 +23,21 @@ class BollingerBandit(bt.Strategy):
         self.MarketPosition = 0
         self.liqDays = self.p.liqLength
         self.avgClose= bt.ind.SMA(period=self.liqDays).data0_close
+        self.executionPrice = 0
        
     def next(self):
         
         if(self.MarketPosition == 0) :             
 
-            if self.rocCalc > 0 and self.avgClose > self.upBand:
+            if self.rocCalc > 0 and self.avgClose < self.upBand:
                 print("self.sell at -> "+ self.data.close[0].__str__())
                 self.sell()
+                self.executionPrice = self.data.close[0]
                 self.MarketPosition=1
-            elif self.rocCalc < 0 and self.avgClose < self.dnBand:
+            elif self.rocCalc < 0 and self.avgClose > self.dnBand:
                  print("self.buy at -> "+ self.data.close[0].__str__())
                  self.buy()
+                 self.executionPrice = self.data.close[0]
                  self.MarketPosition=-1
 
         else:
@@ -42,11 +45,11 @@ class BollingerBandit(bt.Strategy):
             #print(self.liqDays)
             #self.liqDays = 50;
             #self.avgClose= bt.ind.SMA(period=self.liqDays)
-            if self.MarketPosition == 1 and self.avgClose < self.upBand:
+            if self.MarketPosition == 1 and (self.executionPrice - self.data.close[0] > 100 or self.executionPrice - self.data.close[0] < -200): #self.avgClose < self.upBand:
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
-            elif self.MarketPosition == -1 and self.avgClose > self.dnBand:
+            elif self.MarketPosition == -1 and (self.data.close[0] - self.executionPrice  > 100 or self.data.close[0] - self.executionPrice  < -200):#and self.avgClose > self.dnBand:
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
