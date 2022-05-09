@@ -13,7 +13,7 @@ timeframe = "15minute"
 startcash = 100000
 strategyName="BollingerBandit"
 # symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK","BAJAJAUTO","BAJAJFINSV","BAJFINANCE"]
-symbols = ["ASIANPAINT"]
+symbols = ["ICICIBANK"]
 #symbols = pd.read_csv('temp/SYMBOLS.csv', index_col=0)
 # print (symbols)
 #for symbol in symbols.index:

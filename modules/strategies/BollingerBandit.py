@@ -2,6 +2,7 @@
 
 # Create a subclass of Strategy to define the indicators and logic
 import backtrader as bt
+from conf import *
 
 class BollingerBandit(bt.Strategy):
     # list of parameters which are configurable for the strategy
@@ -33,11 +34,15 @@ class BollingerBandit(bt.Strategy):
                 print("self.sell at -> "+ self.data.close[0].__str__())
                 self.sell(size=quantity)
                 self.executionPrice = self.data.close[0]
+                self.targetPrice = self.executionPrice - (self.executionPrice * target / 100)
+                self.slPrice = self.executionPrice + (self.executionPrice * sl / 100)
                 self.MarketPosition=1
             elif self.rocCalc < 0 and self.avgClose > self.dnBand:
                  print("self.buy at -> "+ self.data.close[0].__str__())
                  self.buy(size=quantity)
                  self.executionPrice = self.data.close[0]
+                 self.targetPrice = self.executionPrice + (self.executionPrice * target / 100)
+                 self.slPrice = self.executionPrice - (self.executionPrice * sl / 100)
                  self.MarketPosition=-1
 
         else:
@@ -52,11 +57,15 @@ class BollingerBandit(bt.Strategy):
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
-            elif self.MarketPosition == 1 and (self.executionPrice - self.data.close[0] > 100 or self.executionPrice - self.data.close[0] < -100): #self.avgClose < self.upBand:
+            #elif self.MarketPosition == 1 and (self.executionPrice - self.data.close[0] > 100 or self.executionPrice - self.data.close[0] < -100): #self.avgClose < self.upBand:
+            elif self.MarketPosition == 1 and self.targetPrice > self.data.close[0]  or self.slPrice < self.data.close[0] : 
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
-            elif self.MarketPosition == -1 and (self.data.close[0] - self.executionPrice  > 100 or self.data.close[0] - self.executionPrice  < -100):#and self.avgClose > self.dnBand:
+            
+            #elif self.MarketPosition == -1 and (self.data.close[0] - self.executionPrice  > 100 or self.data.close[0] - self.executionPrice  < -100):#and self.avgClose > self.dnBand:
+            elif self.MarketPosition == -1 and self.targetPrice < self.data.close[0]  or self.slPrice > self.data.close[0] : 
+           
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
