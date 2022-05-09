@@ -3,7 +3,6 @@ import glob
 import os
 import datetime
 
-
 def printTradeAnalysis(analyzer, strategyName, symbol, from_date, to_date):
     '''
     Function to print the Technical Analysis results in a nice format.
@@ -64,7 +63,8 @@ def export_trade_list(trade_list, strategyName, symbol, from_date, to_date):
     )['pnl%'].mean().reset_index(name='Monthly Average PnL')
     # print(df1)
     totalavgpnlpercent = round(df1['Monthly Average PnL'].mean(), 5)
-    df['BROKERAGE'] = df.apply(lambda x: brokerageCalculator(x['pricein'],x['priceout'],1), axis=1)
+    quantity = 30
+    df['BROKERAGE'] = df.apply(lambda x: brokerageCalculator(x['pricein'],x['priceout'],quantity), axis=1)
     
     # print(round(totalavgpnlpercent,5))
     df = df.drop(['pnl/bar', 'ticker', 'formatteddatein'], axis=1)
@@ -76,7 +76,6 @@ def export_trade_list(trade_list, strategyName, symbol, from_date, to_date):
     else:
         df.to_csv(path+"/Trade_List_"+symbol+"_P_"+abs(totalavgpnlpercent).__str__() +
                   "_"+from_date+"_to_"+to_date+".csv", index=False)
-
 
 def export_trade_summary(strategyName, from_date, to_date):
     # setting the path for joining multiple files

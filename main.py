@@ -8,6 +8,7 @@ symbol=""
 from_date = "2021-12-01 09:00:00+05:30"
 to_date = "2021-12-31 16:00:00+05:30"
 timeframe = "15minute"
+#timeframe = "minute"
 #Variable for our starting cash
 startcash = 100000
 strategyName="BollingerBandit"

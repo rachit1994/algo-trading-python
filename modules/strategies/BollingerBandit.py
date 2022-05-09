@@ -26,17 +26,17 @@ class BollingerBandit(bt.Strategy):
         self.executionPrice = 0
        
     def next(self):
-        
+        quantity = 30
         if(self.MarketPosition == 0) :             
 
             if self.rocCalc > 0 and self.avgClose < self.upBand:
                 print("self.sell at -> "+ self.data.close[0].__str__())
-                self.sell()
+                self.sell(size=quantity)
                 self.executionPrice = self.data.close[0]
                 self.MarketPosition=1
             elif self.rocCalc < 0 and self.avgClose > self.dnBand:
                  print("self.buy at -> "+ self.data.close[0].__str__())
-                 self.buy()
+                 self.buy(size=quantity)
                  self.executionPrice = self.data.close[0]
                  self.MarketPosition=-1
 
@@ -45,11 +45,18 @@ class BollingerBandit(bt.Strategy):
             #print(self.liqDays)
             #self.liqDays = 50;
             #self.avgClose= bt.ind.SMA(period=self.liqDays)
-            if self.MarketPosition == 1 and (self.executionPrice - self.data.close[0] > 100 or self.executionPrice - self.data.close[0] < -200): #self.avgClose < self.upBand:
+            hour = self.data.datetime.time().hour
+            minute = self.data.datetime.time().minute
+
+            if hour == 9 and minute == 45:
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
-            elif self.MarketPosition == -1 and (self.data.close[0] - self.executionPrice  > 100 or self.data.close[0] - self.executionPrice  < -200):#and self.avgClose > self.dnBand:
+            elif self.MarketPosition == 1 and (self.executionPrice - self.data.close[0] > 100 or self.executionPrice - self.data.close[0] < -100): #self.avgClose < self.upBand:
+                 print("self.exit at  -> "+ self.data.close[0].__str__())
+                 self.close()
+                 self.MarketPosition =0
+            elif self.MarketPosition == -1 and (self.data.close[0] - self.executionPrice  > 100 or self.data.close[0] - self.executionPrice  < -100):#and self.avgClose > self.dnBand:
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
