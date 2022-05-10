@@ -33,7 +33,7 @@ class BollingerBandit(bt.Strategy):
             if self.rocCalc > 0 and self.avgClose < self.upBand:
                 print("self.sell at -> "+ self.data.close[0].__str__())
                 self.executionPrice = self.data.close[0]
-                quantity = round ((startcash * 0.8) / self.executionPrice)
+                quantity = round ((startcash * (portfolioutilizationpercentage/100)) / self.executionPrice)
                 self.sell(size=quantity)
                 self.targetPrice = self.executionPrice - (self.executionPrice * target / 100)
                 self.slPrice = self.executionPrice + (self.executionPrice * sl / 100)
@@ -41,7 +41,7 @@ class BollingerBandit(bt.Strategy):
             elif self.rocCalc < 0 and self.avgClose > self.dnBand:
                  print("self.buy at -> "+ self.data.close[0].__str__())
                  self.executionPrice = self.data.close[0]
-                 quantity = round ((startcash * 0.8) / self.executionPrice)
+                 quantity = round ((startcash * (portfolioutilizationpercentage/100)) / self.executionPrice)
                  self.buy(size=quantity)
                  self.targetPrice = self.executionPrice + (self.executionPrice * target / 100)
                  self.slPrice = self.executionPrice - (self.executionPrice * sl / 100)
@@ -55,7 +55,7 @@ class BollingerBandit(bt.Strategy):
             hour = self.data.datetime.time().hour
             minute = self.data.datetime.time().minute
 
-            if hour == 9 and minute == 45:
+            if intraday==True and (hour == 9 and minute == 45):
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
