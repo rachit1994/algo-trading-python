@@ -58,14 +58,13 @@ class BollingerBandit(bt.Strategy):
                  self.close()
                  self.MarketPosition =0
             #elif self.MarketPosition == 1 and (self.executionPrice - self.data.close[0] > 100 or self.executionPrice - self.data.close[0] < -100): #self.avgClose < self.upBand:
-            elif self.MarketPosition == 1 and self.targetPrice > self.data.close[0]  or self.slPrice < self.data.close[0] : 
+            elif self.MarketPosition == 1 and (self.targetPrice > self.data.close[0]  or self.slPrice < self.data.close[0]) : 
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0
             
             #elif self.MarketPosition == -1 and (self.data.close[0] - self.executionPrice  > 100 or self.data.close[0] - self.executionPrice  < -100):#and self.avgClose > self.dnBand:
-            elif self.MarketPosition == -1 and self.targetPrice < self.data.close[0]  or self.slPrice > self.data.close[0] : 
-           
+            elif self.MarketPosition == -1 and (self.targetPrice < self.data.close[0]  or self.slPrice > self.data.close[0]) : 
                  print("self.exit at  -> "+ self.data.close[0].__str__())
                  self.close()
                  self.MarketPosition =0

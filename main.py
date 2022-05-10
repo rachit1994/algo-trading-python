@@ -2,20 +2,10 @@ import modules.backtest  as btest
 import modules.strategies as strategy
 import pandas as pd
 from lib.utils.format_analyzer_output import *
+from conf import *
 # import yfinance as yf
 
-symbol=""
-from_date = "2021-12-01 09:00:00+05:30"
-to_date = "2021-12-31 16:00:00+05:30"
-timeframe = "15minute"
-#timeframe = "minute"
-#Variable for our starting cash
-startcash = 100000
-strategyName="BollingerBandit"
-# symbols = ["ADANIPORTS","ASIANPAINT","AXISBANK","BAJAJAUTO","BAJAJFINSV","BAJFINANCE"]
-symbols = ["ICICIBANK"]
-#symbols = pd.read_csv('temp/SYMBOLS.csv', index_col=0)
-# print (symbols)
+
 #for symbol in symbols.index:
 for symbol in symbols:
     print("Running strategy for symbol -> "+symbol)

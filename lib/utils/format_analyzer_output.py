@@ -15,7 +15,7 @@ def printTradeAnalysis(analyzer, strategyName, symbol, from_date, to_date):
     win_streak = analyzer.streak.won.longest
     lose_streak = analyzer.streak.lost.longest
     pnl_net = round(analyzer.pnl.net.total, 2)
-    strike_rate = (total_won / total_closed) * 100
+    strike_rate = round((total_won / total_closed) * 100, 2)
     # Designate the rows
     h1 = ['Total Open', 'Total Closed', 'Total Won', 'Total Lost']
     h2 = ['Strike Rate', 'Win Streak', 'Losing Streak', 'PnL Net']
