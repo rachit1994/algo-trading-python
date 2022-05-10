@@ -5,7 +5,6 @@ from lib.utils.format_analyzer_output import *
 from conf import *
 # import yfinance as yf
 
-
 #for symbol in symbols.index:
 for symbol in symbols:
     print("Running strategy for symbol -> "+symbol)

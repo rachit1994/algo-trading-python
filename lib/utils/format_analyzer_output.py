@@ -61,8 +61,8 @@ def export_trade_list(trade_list, strategyName, symbol, from_date, to_date):
     df1 = df.groupby(
         [df.formatteddatein.dt.strftime('%b %Y')]
     )['pnl%'].mean().reset_index(name='Monthly Average PnL')
-    # print(df1)
-    totalavgpnlpercent = round(df1['Monthly Average PnL'].mean(), 5)*100
+    #print(df1)
+    totalavgpnlpercent = round(df1['Monthly Average PnL'].mean(), 3)
     quantity = 30
     df['BROKERAGE'] = df.apply(lambda x: brokerageCalculator(x['pricein'],x['priceout'],quantity), axis=1)
     
