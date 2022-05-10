@@ -60,7 +60,7 @@ def export_trade_list(trade_list, strategyName, symbol, from_date, to_date):
     path = "temp/"+strategyName
     df1 = df.groupby(
         [df.formatteddatein.dt.strftime('%b %Y')]
-    )['pnl%'].mean().reset_index(name='Monthly Average PnL')
+    )['pnl%'].sum().reset_index(name='Monthly Average PnL')
     #print(df1)
     totalavgpnlpercent = round(df1['Monthly Average PnL'].mean(), 3)
     quantity = 30
