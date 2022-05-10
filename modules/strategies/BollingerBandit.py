@@ -27,20 +27,22 @@ class BollingerBandit(bt.Strategy):
         self.executionPrice = 0
        
     def next(self):
-        quantity = 30
+        
         if(self.MarketPosition == 0) :             
 
             if self.rocCalc > 0 and self.avgClose < self.upBand:
                 print("self.sell at -> "+ self.data.close[0].__str__())
-                self.sell(size=quantity)
                 self.executionPrice = self.data.close[0]
+                quantity = round ((startcash * 0.8) / self.executionPrice)
+                self.sell(size=quantity)
                 self.targetPrice = self.executionPrice - (self.executionPrice * target / 100)
                 self.slPrice = self.executionPrice + (self.executionPrice * sl / 100)
                 self.MarketPosition=1
             elif self.rocCalc < 0 and self.avgClose > self.dnBand:
                  print("self.buy at -> "+ self.data.close[0].__str__())
-                 self.buy(size=quantity)
                  self.executionPrice = self.data.close[0]
+                 quantity = round ((startcash * 0.8) / self.executionPrice)
+                 self.buy(size=quantity)
                  self.targetPrice = self.executionPrice + (self.executionPrice * target / 100)
                  self.slPrice = self.executionPrice - (self.executionPrice * sl / 100)
                  self.MarketPosition=-1
