@@ -4,3 +4,5 @@ from __future__ import (absolute_import, division, print_function,
 from .SmaCrossover import *
 from .ABCD import *
 from .BollingerBandit import *
+from .KingKeltner import *
+from .VWAPCrossover import *

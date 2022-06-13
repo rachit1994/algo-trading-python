@@ -1,5 +1,6 @@
 from .localfeed import * 
 from .localcsvfeed import *
+from .kiteLiveFeed import *
 
 
 def pull(instrumenttype, symbol, tf, **kwargs):
@@ -17,3 +18,4 @@ def pull(instrumenttype, symbol, tf, **kwargs):
 
         #return localfeed(instrumenttype, symbol, tf, fromDate, toDate)
         return localcsvfeed(instrumenttype, symbol, tf, fromDate, toDate)
+        #return kiteLiveFeed(instrumenttype, symbol, tf, fromDate, toDate)
